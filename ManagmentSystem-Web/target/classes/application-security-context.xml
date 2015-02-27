@@ -1,0 +1,38 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<http use-expressions="true">
+
+		<form-login login-page="/login.do" default-target-url="/home.do" authentication-failure-url="/login.do?errorLogin" />
+
+		<logout logout-success-url="/login.do" logout-url="/logout.do"	invalidate-session="true" delete-cookies="JSESSIONID" />
+
+		<!-- Resourcess accessble to all-->
+		<intercept-url pattern="/index.jsp" access="permitAll" />
+		<intercept-url pattern="/login.do" access="permitAll" />
+		<intercept-url pattern="/home.do" access="permitAll" />
+		<intercept-url pattern="/logout.do" access="permitAll" />
+		<intercept-url pattern="/forgotPassword.do" access="permitAll" />
+		<intercept-url pattern="/resetPassword.do" access="permitAll" />
+		<intercept-url pattern="/resources/**" access="permitAll" /> 
+		<intercept-url pattern='/**' access='isAuthenticated()' />
+		
+		<!-- All admin functionaly URL'S are -->
+		<intercept-url pattern='/admin/**' access="hasRole('ADMIN')"/>
+		
+		
+	<!--
+		<session-management invalid-session-url="/logout.do" session-fixation-protection="newSession" session-authentication-error-url="/logout.do">
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/logout.do" />
+		</session-management>-->
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="UserAuthService">
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
